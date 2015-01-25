@@ -18,7 +18,7 @@ object ClockSyncTest extends SimpleTestSuite {
     val localClock1 = () => getTimePassed() + System.currentTimeMillis() + 10000
     val localClock2 = () => getTimePassed() + System.currentTimeMillis() - 10000
 
-    val (connection1, connection2) = ProxyConnectionHandle.newConnectionsPair()
+    val (connection1, connection2) = ConnectionUtils.dummyConnectionPair()
     val clockSync1 = new ClockSync(connection1, localClock1)
     val clockSync2 = new ClockSync(connection2, localClock2)
     connection1.handlerPromise.success { m =>
@@ -44,7 +44,7 @@ object ClockSyncTest extends SimpleTestSuite {
   }
   
   test("should set peer identity") {
-    val (connection1, connection2) = ProxyConnectionHandle.newConnectionsPair()
+    val (connection1, connection2) = ConnectionUtils.dummyConnectionPair()
     val clockSync1 = new ClockSync(connection1, System.currentTimeMillis)
     val clockSync2 = new ClockSync(connection2, System.currentTimeMillis)
     

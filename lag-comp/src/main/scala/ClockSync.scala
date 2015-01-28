@@ -25,7 +25,7 @@ class ClockSync(connection: ConnectionHandle, localTime: () => Long) {
     val remoteRandom = pickle.toLong
     if(localRandom < remoteRandom) {
       behavior = askingTime(localTime()) _
-      connection.write("")
+      connection.write("dummy")
     } else {
       behavior = givingTime _
     }

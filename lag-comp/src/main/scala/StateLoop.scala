@@ -19,15 +19,13 @@ class StateLoop[Input, State](
   }
   
   def computeState(time: Int, events: List[Event[Input]]): State = {
-    lazy val (nowEvents, prevEvents) = events.span(_.time == time)
-    lazy val recursively = nextState(
-      computeState(time - 1, prevEvents),
-      nowEvents.map(_.move).toSet)
     if(time == 0) {
       initialState
     } else {
-      cache.getOrElseUpdate(time, events, recursively)
+      cache.getOrElseUpdate(time, events, {
+        val (nowEvents, prevEvents) = events.span(_.time == time)
+        nextState(computeState(time - 1, prevEvents), nowEvents.map(_.move).toSet)
+      })
     }
   }
 }
-

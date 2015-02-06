@@ -1,7 +1,7 @@
 val commonSettings = Seq(
   organization := "com.github.olivierblanvillain",
   version := "0.1-SNAPSHOT",
-  scalaVersion := "2.11.4",
+  scalaVersion := "2.11.5",
   scalacOptions ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -21,8 +21,8 @@ lazy val lagComp = crossProject
   .settings(name := "scala-lag-comp")
   .settings(libraryDependencies ++= Seq(
     "com.github.olivierblanvillain" %%% "transport-core" % "0.1-SNAPSHOT",
-    "com.lihaoyi" %%% "upickle" % "0.2.6-M3"))
-  .jvmSettings(libraryDependencies += "org.monifu" %%% "minitest" % "0.10" % "test")
+    "com.lihaoyi" %%% "upickle" % "0.2.6",
+    "org.monifu" %%% "minitest" % "0.11" % "test"))
   .jvmSettings(testFrameworks += new TestFramework("minitest.runner.Framework"))
 lazy val lagCompJVM = lagComp.jvm
 lazy val lagCompJS = lagComp.js

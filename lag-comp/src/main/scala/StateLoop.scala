@@ -2,7 +2,7 @@ package lagcomp
 
 class StateLoop[Input, State](
       initialState: State,
-      nextState: (State, Set[Action[Input]]) => State) {
+      nextState: (State, List[Action[Input]]) => State) {
   
   var eventsSoFar: List[Event[Input]] = List()
   val cache = new WeakMap[List[Event[Input]], State](100)
@@ -24,7 +24,7 @@ class StateLoop[Input, State](
     } else {
       cache.getOrElseUpdate(time, events, {
         val (nowEvents, prevEvents) = events.span(_.time == time)
-        nextState(computeState(time - 1, prevEvents), nowEvents.map(_.move).toSet)
+        nextState(computeState(time - 1, prevEvents), nowEvents.map(_.move))
       })
     }
   }

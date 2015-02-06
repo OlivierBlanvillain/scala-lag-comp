@@ -12,7 +12,7 @@ case object P2 extends Peer
 
 class Engine[Input, State](
       initialState: State,
-      nextState: (State, Set[Action[Input]]) => State,
+      nextState: (State, List[Action[Input]]) => State,
       render: Peer => State => Unit,
       broadcast: ConnectionHandle
     )(implicit

@@ -13,19 +13,19 @@ case object P2 extends Peer
 class Engine[Input, State](
       initialState: State,
       nextState: (State, List[Action[Input]]) => State,
-      render: Peer => State => Unit,
-      broadcast: ConnectionHandle
+      render: (Peer, State) => Unit,
+      connection: ConnectionHandle
     )(implicit
       ec: ExecutionContext,
       iw: upickle.Writer[Event[Input]],
       ir: upickle.Reader[Event[Input]]
-    ) extends AbstractEngine(initialState, nextState, render, broadcast) {
+    ) extends AbstractEngine(initialState, nextState, render, connection) {
   
   def triggerRendering(): Unit = {
     // Not with a for loop to ensure that render is called in the same thread
     (clockSync.futureGlobalTime.value, clockSync.futureIdentity.value) match{
       case (Some(Success(globalTime)), Some(Success(identity))) =>
-        render(identity)(loop.stateAt(globalTime()))
+        render(identity, loop.stateAt(globalTime()))
       case _ => ()
     }
   }
@@ -34,9 +34,9 @@ class Engine[Input, State](
   private val actPromise = Promise[Input => Unit]()
 
   val loop = new StateLoop(initialState, nextState)
-  val clockSync = new ClockSync(broadcast, System.currentTimeMillis)
+  val clockSync = new ClockSync(connection, System.currentTimeMillis)
   
-  broadcast.handlerPromise.success { pickle =>
+  connection.handlerPromise.success { pickle =>
     if(clockSync.pending) {
       clockSync.receive(pickle)
     } else {
@@ -50,6 +50,6 @@ class Engine[Input, State](
   } actPromise.success { input =>
     val event = Event(Action(input, identity), globalTime())
     loop.receive(event)
-    broadcast.write(upickle.write(event))
+    connection.write(upickle.write(event))
   }
 }

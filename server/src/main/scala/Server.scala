@@ -9,7 +9,6 @@ object Server extends App {
   
   var pendingConnection: Option[ConnectionHandle] = None
   
-  
   println("Starting Up...")
   val netty = new WebSocketServer(8080, "/ws")
   netty.listen().foreach { promise =>

@@ -1,4 +1,4 @@
-val commonSettings = Seq(
+lazy val commonSettings = Seq(
   organization := "com.github.olivierblanvillain",
   version := "0.1-SNAPSHOT",
   scalaVersion := "2.11.5",
@@ -11,8 +11,26 @@ val commonSettings = Seq(
     "-Ywarn-numeric-widen",
     "-Xfuture",
     "-Xlint"
-  )
-)
+  ),
+  homepage := Some(url("https://github.com/OlivierBlanvillain/scala-lag-comp")),
+  licenses := Seq(("MIT", url("http://opensource.org/licenses/mit-license.php"))),
+  scmInfo := Some(ScmInfo(
+    url("https://github.com/OlivierBlanvillain/scala-lag-comp"),
+    "scm:git:git@github.com:OlivierBlanvillain/scala-lag-comp.git",
+    Some("scm:git:git@github.com:OlivierBlanvillain/scala-lag-comp.git"))),
+  pomExtra := (
+    <developers>
+      <developer>
+        <id>OlivierBlanvillain</id>
+        <name>Olivier Blanvillain</name>
+        <url>https://github.com/OlivierBlanvillain/</url>
+      </developer>
+    </developers>
+  ),
+  resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+) ++ sonatypeSettings
+
+lazy val root = project.in(file(".")).aggregate(lagCompJVM, lagCompJS)
 
 lazy val lagComp = crossProject
   .crossType(CrossType.Pure)
